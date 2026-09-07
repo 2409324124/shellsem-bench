@@ -1,4 +1,14 @@
 {
-  "compaction": {"enabled": false},
-  "retry": {"enabled": false, "provider": {"maxRetries": 0, "timeoutMs": 60000}}
+  "compaction": {
+    "enabled": false
+  },
+  "retry": {
+    "enabled": true,
+    "maxRetries": 2,
+    "baseDelayMs": 2000,
+    "provider": {
+      "maxRetries": 0,
+      "timeoutMs": 60000
+    }
+  }
 }

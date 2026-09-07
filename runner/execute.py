@@ -1,5 +1,6 @@
 """One guarded model/task run; the observer never runs inside this process."""
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -7,6 +8,7 @@ import selectors
 import subprocess
 import time
 from runner.config import load_config
+from runner.scoring import summarize,read_events
 from runner.sandbox import Sandbox,docker
 from runner.state import heartbeat,atomic_json
 from verifier.evaluate import evaluate
@@ -37,15 +39,12 @@ def run(task,label,run_dir,limit):
         cmd=['node',str(ROOT/'runner/pi_agent.mjs'),'run',s.name,str(cfg),str(prompt)]
         process=subprocess.Popen(cmd,env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         sel=selectors.DefaultSelector();sel.register(process.stdout,selectors.EVENT_READ,'stdout');sel.register(process.stderr,selectors.EVENT_READ,'stderr')
-        start=time.monotonic();activity=time.time();buffers={'stdout':b'','stderr':b''};events_count=0;tool=None;budget=False;last_stats=0;stats={};tool_ids=set();usage={'input':0,'output':0,'reasoning':0,'cacheRead':0}
+        start=time.monotonic();activity=time.time();buffers={'stdout':b'','stderr':b''};events_count=0;tool=None;budget=False;last_stats=0;stats={};tool_ids=set();usage={'input':0,'output':0,'reasoning':0,'cacheRead':0};score_events=[];retry=None;budget_reason=None
         with (run_dir/'events.jsonl').open('w') as log:
             while sel.get_map():
                 elapsed=time.monotonic()-start
                 if elapsed>limit or log.tell()>33554432:
-                    budget=True;process.kill();
-                    partial=s.exec(['head','-c','1048576','/workspace/solution.sh'],check=False)
-                    if partial.returncode==0:(run_dir/'solution.partial.sh').write_bytes(partial.stdout)
-                    s.remove();break
+                    budget=True;budget_reason='generation_time_limit' if elapsed>limit else 'event_log_limit';process.kill();break
                 for key,_ in sel.select(.1):
                     data=os.read(key.fileobj.fileno(),65536)
                     if not data:sel.unregister(key.fileobj);continue
@@ -55,6 +54,14 @@ def run(task,label,run_dir,limit):
                         text=line.decode(errors='replace').replace(config.api_key,'[REDACTED]')
                         try:event=json.loads(text)
                         except ValueError:event={'type':'controller_stderr','text':text}
+                        kind=event.get('type')
+                        if kind in ('message_end','controller_error','auto_retry_start','auto_retry_end','tool_execution_end','api_transport_error','shell_command_end'):
+                            compact=dict(event)
+                            if kind=='message_end':compact['message']={k:v for k,v in event.get('message',{}).items() if k in ('role','stopReason','errorMessage')}
+                            if kind=='tool_execution_end':compact={'type':kind,'isError':event.get('isError',False)}
+                            score_events.append(compact)
+                        if kind=='auto_retry_start':retry={**event,'next_attempt_at':time.time()+event.get('delayMs',0)/1000}
+                        elif kind in ('auto_retry_end','api_request_start'):retry=None
                         if event.get('type')=='tool_execution_start':
                             tool={'name':event.get('toolName'),'args':event.get('args'),'started_at':time.time()};tool_ids.add(event.get('toolCallId'))
                         elif event.get('type')=='tool_execution_end':tool=None
@@ -68,19 +75,33 @@ def run(task,label,run_dir,limit):
                     except Exception as exc:stats={'observation_error':type(exc).__name__}
                     last_stats=elapsed
                 heartbeat(run_dir,'generating',task=task,label=label,container=s.name,controller_pid=process.pid,last_activity=activity,
-                    elapsed=round(elapsed,1),remaining_seconds=max(0,round(limit-elapsed,1)),active_tool=tool,events=events_count,resources=stats,tool_calls=len(tool_ids),usage=usage)
+                    elapsed=round(elapsed,1),remaining_seconds=max(0,round(limit-elapsed,1)),active_tool=tool,events=events_count,resources=stats,tool_calls=len(tool_ids),usage=usage,retry=retry,generation=summarize({},score_events)['generation'])
             process.wait(timeout=4)
+        sel.close();process.stdout.close();process.stderr.close()
         result.update(generation_seconds=round(time.monotonic()-start,3),tool_calls=len(tool_ids),usage=usage)
-        if budget:result['status']='generation_budget_exceeded';return result
-        if process.returncode:result['status']='generation_error';result['controller_rc']=process.returncode;return result
-        solution=s.exec(['head','-c','1048577','/workspace/solution.sh'],check=False)
-        if solution.returncode or len(solution.stdout)>1048576:result['status']='missing_or_oversized_submission';return result
+        if budget:
+            result.update(status='generation_budget_exceeded',generation_failure=budget_reason)
+        elif process.returncode:
+            result.update(status='generation_error',controller_rc=process.returncode)
+            result['generation_failure']=summarize(result,score_events)['generation']['failure']
+        else:result['status']='pass'
+        # Stop this container's unprivileged processes before collecting the artifact.
+        # PID 1 belongs to root; the new reader starts after this namespace-local signal.
+        s.exec(['bash','-c','kill -STOP -1'],check=False)
+        solution=s.exec(['bash','-c','test -f /workspace/solution.sh && head -c 1048577 -- /workspace/solution.sh'],check=False)
+        if solution.returncode or len(solution.stdout)>1048576:
+            result['submission_reason']='missing_submission' if solution.returncode else 'oversized_submission'
+            if not result.get('generation_failure'):result['status']=result['submission_reason']
+            return result
+        result['artifact_origin']='interrupted' if result.get('generation_failure') else 'completed'
+        result['artifact_sha256']=hashlib.sha256(solution.stdout).hexdigest()
         (run_dir/'solution.sh').write_bytes(solution.stdout)
         s.remove()
         verification_start=time.monotonic()
         rows=evaluate(task,solution.stdout,run_dir)
         result['verification_seconds']=round(time.monotonic()-verification_start,3)
-        result.update(status='pass' if all(row['passed'] for row in rows) else 'fail',cases=rows)
+        result['cases']=rows
+        if not result.get('generation_failure'):result['status']='pass' if all(row['passed'] for row in rows) else 'fail'
         return result
     finally:s.remove()
 
@@ -90,6 +111,7 @@ def main():
     run_dir=Path(os.environ['SHELLSEM_RUN_DIR']).resolve();run_dir.mkdir(parents=True,exist_ok=True)
     try:result=run(args.task,args.label,run_dir,args.limit)
     except Exception as exc:result={'task':args.task,'label':args.label,'status':'infrastructure_error','error_type':type(exc).__name__,'error':str(exc)[:1500]}
+    result['score']=summarize(result,read_events(run_dir/'events.jsonl'))
     atomic_json(run_dir/'result.json',result)
     heartbeat(run_dir,'finished',task=args.task,label=args.label,result_status=result['status'])
     return 1 if result['status']=='infrastructure_error' else 0

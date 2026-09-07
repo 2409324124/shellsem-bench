@@ -1,5 +1,5 @@
 {
-  "status": "smoke_preparation",
+  "status": "retry_validation",
   "harness": {
     "package": "@earendil-works/pi-coding-agent",
     "version": "0.85.1"
@@ -43,6 +43,22 @@
     "generation_wall_seconds": 300,
     "tool_wall_seconds": 30,
     "tool_calls": 100,
-    "note": "Server capacity is not established by these client limits."
+    "note": "Server capacity is not established by these client limits.",
+    "concurrency": 1,
+    "retry": {
+      "max_retries_per_failed_turn": 2,
+      "backoff_seconds": [
+        2,
+        4
+      ],
+      "provider_retries": 0,
+      "request_timeout_seconds": 60,
+      "included_in_generation_wall_budget": true
+    }
+  },
+  "scoring": {
+    "schema_version": 2,
+    "submission": "hidden cases on frozen artifact",
+    "generation": "independent status, anomalies, retries and failure cause"
   }
 }

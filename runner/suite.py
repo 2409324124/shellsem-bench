@@ -1,4 +1,5 @@
-"""Resume a one-run-per-model smoke matrix, with at most two guarded runs."""
+"""Resume a one-run-per-model smoke matrix, with configurable concurrency (serial by default)."""
+import argparse
 import json
 import os
 from pathlib import Path
@@ -20,13 +21,21 @@ def guard_alive(state):
 
 
 def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--prefix',default='smoke-retry')
+    parser.add_argument('--concurrency',type=int,choices=(1,2),default=1)
+    parser.add_argument('--tasks',nargs='+',choices=[f'BSH00{i}' for i in range(1,6)],default=[f'BSH00{i}' for i in range(1,6)])
+    parser.add_argument('--labels',nargs='+',choices=('baseline','preview'),default=['baseline','preview'])
+    args=parser.parse_args()
+    import re
+    if not re.fullmatch(r'[A-Za-z0-9_-]+',args.prefix):parser.error('prefix must contain only letters, digits, underscores and hyphens')
     root=ROOT/'runs'
-    jobs=[(label,task) for task in [f'BSH00{i}' for i in range(1,6)] for label in ('baseline','preview')]
+    jobs=list(dict.fromkeys((label,task) for task in args.tasks for label in args.labels))
     children=[]
     while True:
         active=[];pending=[];finished=[];orphaned=[]
         for label,task in jobs:
-            p=root/f'smoke-low-{label}-{task}'
+            p=root/f'{args.prefix}-{label}-{task}'
             guard=read_json(p/'guard.json')
             if guard.get('status') in ('finished','terminated'):finished.append(p.name)
             elif guard.get('status')=='watching':
@@ -34,13 +43,13 @@ def main():
                 else:orphaned.append(p.name)
             elif p.exists():orphaned.append(p.name)
             else:pending.append((label,task,p))
-        for label,task,p in pending[:max(0,2-len(active))]:
+        for label,task,p in pending[:max(0,args.concurrency-len(active))]:
             p.mkdir()
             with (root/'launch.log').open('ab') as log:
                 child=subprocess.Popen([sys.executable,'-m','runner.guard','--run-dir',str(p),'--deadline-seconds','600','--',sys.executable,'-m','runner.execute','--task',task,'--label',label],cwd=ROOT,stdout=log,stderr=log,start_new_session=True)
                 children.append(child)
             active.append(p.name)
-        atomic_json(root/'suite.json',{'pid':os.getpid(),'heartbeat':time.time(),'active':active,'completed':finished,'orphaned':orphaned,'total':10,'status':'running' if active or pending else 'finished'})
+        atomic_json(root/'suite.json',{'pid':os.getpid(),'heartbeat':time.time(),'active':active,'completed':finished,'orphaned':orphaned,'total':len(jobs),'concurrency':args.concurrency,'prefix':args.prefix,'status':'running' if active or pending else 'finished'})
         for child in children:child.poll()
         if not active and not pending:break
         time.sleep(1)

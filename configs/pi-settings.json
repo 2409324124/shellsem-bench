@@ -1,0 +1,4 @@
+{
+  "compaction": {"enabled": false},
+  "retry": {"enabled": false, "provider": {"maxRetries": 0, "timeoutMs": 60000}}
+}

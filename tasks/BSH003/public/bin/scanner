@@ -1,0 +1,2 @@
+#!/bin/bash
+printf 'one\0two\nlines\0\0'

@@ -1,0 +1,4 @@
+#!/bin/bash
+sleep .1
+printf '%s\0\n\n' "$2"
+printf 'log:%s' "$2" >&2

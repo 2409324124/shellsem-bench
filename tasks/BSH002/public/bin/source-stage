@@ -1,0 +1,3 @@
+#!/bin/bash
+printf 'abc\0end\n\n'
+printf source >&2

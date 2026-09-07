@@ -1,0 +1,48 @@
+{
+  "status": "smoke_preparation",
+  "harness": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "0.85.1"
+  },
+  "models": [
+    {
+      "label": "preview",
+      "env_file": ".env",
+      "requested_model": "qwen-latest-series-invite-2608",
+      "observed_response_model": "qwen-latest-series-invite-202608-w4"
+    },
+    {
+      "label": "baseline",
+      "env_file": ".env.baseline",
+      "requested_model": "qwen3.8-max-0902",
+      "observed_response_model": "qwen3.8-max-0902"
+    }
+  ],
+  "tasks": [
+    "BSH001",
+    "BSH002",
+    "BSH003",
+    "BSH004",
+    "BSH005"
+  ],
+  "runs_per_model_per_task": 1,
+  "planned_generation_runs": 10,
+  "formal_budgets_frozen": false,
+  "sandbox": {
+    "image": "wcb/ps7-sidecar:7.6.4",
+    "pull": "never",
+    "cpus": 1,
+    "memory_mib": 512,
+    "pids": 128,
+    "network": "bridge"
+  },
+  "smoke_settings": {
+    "enable_thinking": false,
+    "max_tokens": 4096,
+    "client_context_threshold": 32768,
+    "generation_wall_seconds": 300,
+    "tool_wall_seconds": 30,
+    "tool_calls": 100,
+    "note": "Server capacity is not established by these client limits."
+  }
+}

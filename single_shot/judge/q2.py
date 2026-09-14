@@ -65,9 +65,9 @@ def extract(raw):
     return candidates[-1] if candidates else raw
 
 
-def grade(directory):
-    directory=Path(directory);source=directory/'first-answer.txt'
-    if not source.exists():source=directory/'collect.artifact.sh'
+def grade(directory,source_name=None):
+    directory=Path(directory);source=directory/(source_name or 'first-answer.txt')
+    if not source.exists() and source_name is None:source=directory/'collect.artifact.sh'
     raw=source.read_text()
     code=extract(raw);(directory/'submission.sh').write_text(code)
     rows=[]
@@ -129,11 +129,12 @@ caller_job=$!
                 rows.append(row);(d/'result.json').write_text(json.dumps(row,indent=2)+'\n')
             finally:s.remove()
     summary={'passed':sum(r['passed'] for r in rows),'total':len(rows),'cases':rows,
-             'source_sha256':hashlib.sha256(code.encode()).hexdigest(),'submission_source':source.name,'constraint_review':'manual, reported separately','extraction_policy':'last complete collect code block within the original first response; no repair',
+             'source_sha256':hashlib.sha256(code.encode()).hexdigest(),'submission_source':source.name,'constraint_review':'manual, reported separately','extraction_policy':'unmodified saved function file; response format reviewed separately' if source.name=='collect.artifact.sh' else 'last complete collect code block within the original first response; no repair',
              'fixture_origin':'independently constructed; original reference package was not supplied'}
     (directory/'grade.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')
     print(directory.name,summary['passed'],'/',summary['total'],flush=True)
 
 if __name__=='__main__':
-    import sys
-    for p in sys.argv[1:]:grade(p)
+    import argparse
+    parser=argparse.ArgumentParser();parser.add_argument('directories',nargs='+');parser.add_argument('--source',choices=['first-answer.txt','collect.artifact.sh']);args=parser.parse_args()
+    for p in args.directories:grade(p,args.source)

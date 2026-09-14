@@ -67,3 +67,5 @@ python3 -m runner.guard --run-dir runs/NEW_UNIQUE_RUN --deadline-seconds 0 -- \
 ```
 
 旧模型改为 baseline。自动压缩是 Pi 自带的历史总结/恢复机制，事件及请求全部留档；评测者不提供隐藏测试反馈。原默认 compaction=false 保留，只有显式参数开启，以便复现旧记录。
+
+最终压缩配置保留最近 4096 个估算 token；默认 20000 对该轨迹可能无可压缩区段。评分器支持 `--source collect.artifact.sh`，用于模型声明完成但正文漏贴函数的情况，来源与格式错误单独记录；无完成声明的中间文件仍仅作诊断。

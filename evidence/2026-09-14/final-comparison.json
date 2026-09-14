@@ -1,0 +1,292 @@
+{
+  "date": "2026-09-14",
+  "models": {
+    "old": "qwen3.8-max-0902",
+    "new": "qwen-latest-series-invite-2608"
+  },
+  "bare": {
+    "Q1": {
+      "old": {
+        "passed": 0,
+        "total": 2
+      },
+      "new": {
+        "passed": 0,
+        "total": 2
+      }
+    },
+    "Q2": {
+      "old": {
+        "passed": 0,
+        "total": 32,
+        "source": "runs/single-shot/2026-09-14-first/baseline-Q2"
+      },
+      "new": {
+        "passed": 28,
+        "total": 32,
+        "source": "runs/single-shot/2026-09-14-transport-retry/preview-Q2"
+      }
+    }
+  },
+  "pi": {
+    "Q1": {
+      "old": {
+        "passed": 2,
+        "total": 2,
+        "explanation_passed": false
+      },
+      "new": {
+        "passed": 2,
+        "total": 2,
+        "explanation_passed": false
+      }
+    },
+    "Q2_runs": [
+      {
+        "run": "pi-q2-final-20260914-baseline-1",
+        "result": {
+          "task": "Q2",
+          "label": "baseline",
+          "mode": "pi_tools",
+          "requested_model": "qwen3.8-max-0902",
+          "status": "captured",
+          "generation_seconds": 398.771,
+          "tool_calls": 50,
+          "generation_limit_seconds": 0,
+          "max_tokens": 8192,
+          "context_window": 32768,
+          "max_tool_calls": 0,
+          "auto_compact": true,
+          "finish_reason": "stop",
+          "score": {
+            "schema_version": 2,
+            "submission": {
+              "status": "fail",
+              "passed": 0,
+              "total": 32,
+              "scope": "saved function at declared completion",
+              "response_format_passed": false,
+              "constraints_passed": false
+            },
+            "generation": {
+              "status": "completed_with_anomalies",
+              "failure": null,
+              "final_stop_reason": "stop",
+              "anomalies": [
+                "shell_nonzero_exit",
+                "tool_error"
+              ],
+              "retry_count": 0,
+              "retries": [],
+              "tool_errors": 1,
+              "shell_nonzero_exits": 1,
+              "transport_errors": []
+            }
+          }
+        },
+        "grade": {
+          "passed": 0,
+          "total": 32,
+          "source_sha256": "2c45d2ce2de568b56fff082129ee258fb6a619b4effb85b36cf6db9b608dd32e",
+          "submission_source": "collect.artifact.sh",
+          "constraint_review": {
+            "passed": false,
+            "reasons": [
+              "Final answer omits function; saved file includes extra shell configuration.",
+              "Scanner stdin is inherited from caller.",
+              "Unguarded wait fails under direct errexit."
+            ]
+          },
+          "extraction_policy": "unmodified saved function file; response format reviewed separately",
+          "fixture_origin": "independently constructed; original reference package was not supplied",
+          "full_task_pass": false,
+          "submission_classification": "saved function after model declared completion; final response format failed"
+        },
+        "answer_sha256": "0e36f33f0ee9dec50819bf28b1d75f50a2dcd075e2762a83b11bde79b3a7de58"
+      },
+      {
+        "run": "pi-q2-final-20260914-baseline-2",
+        "result": {
+          "task": "Q2",
+          "label": "baseline",
+          "mode": "pi_tools",
+          "requested_model": "qwen3.8-max-0902",
+          "status": "captured",
+          "generation_seconds": 516.916,
+          "tool_calls": 71,
+          "generation_limit_seconds": 0,
+          "max_tokens": 8192,
+          "context_window": 32768,
+          "max_tool_calls": 0,
+          "auto_compact": true,
+          "finish_reason": "stop",
+          "score": {
+            "schema_version": 2,
+            "submission": {
+              "status": "fail",
+              "passed": 6,
+              "total": 32,
+              "scope": "saved function at declared completion",
+              "response_format_passed": false,
+              "constraints_passed": false
+            },
+            "generation": {
+              "status": "completed_with_anomalies",
+              "failure": null,
+              "final_stop_reason": "stop",
+              "anomalies": [
+                "tool_error",
+                "shell_nonzero_exit"
+              ],
+              "retry_count": 0,
+              "retries": [],
+              "tool_errors": 4,
+              "shell_nonzero_exits": 3,
+              "transport_errors": []
+            }
+          }
+        },
+        "grade": {
+          "passed": 6,
+          "total": 32,
+          "source_sha256": "db3812df73e07c6a65693c390d6a43b3f9b96a1b8df53383d93f306389b86fc5",
+          "submission_source": "collect.artifact.sh",
+          "constraint_review": {
+            "passed": false,
+            "reasons": [
+              "Worker stdin is closed rather than readable EOF.",
+              "Worker inherits scanner fd 4.",
+              "Final response omits the saved function."
+            ]
+          },
+          "extraction_policy": "unmodified saved function file; response format reviewed separately",
+          "fixture_origin": "independently constructed; original reference package was not supplied",
+          "full_task_pass": false,
+          "submission_classification": "saved function after completion claim; final response format failed"
+        },
+        "answer_sha256": "f38a521514e7fd637ba270839aaef99ee1ee14cbbb97ccbdc302c23096092fa2"
+      },
+      {
+        "run": "pi-q2-final-20260914-preview-1",
+        "result": {
+          "task": "Q2",
+          "label": "preview",
+          "mode": "pi_tools",
+          "requested_model": "qwen-latest-series-invite-2608",
+          "status": "repetitive_tool_loop",
+          "generation_seconds": 1103.676,
+          "tool_calls": 329,
+          "generation_limit_seconds": 0,
+          "max_tokens": 8192,
+          "context_window": 32768,
+          "max_tool_calls": 0,
+          "auto_compact": true,
+          "answer_status": "missing_final_answer",
+          "score": {
+            "schema_version": 2,
+            "submission": {
+              "status": "not_evaluated",
+              "passed": 0,
+              "total": 0
+            },
+            "generation": {
+              "status": "failed",
+              "failure": "repetitive_tool_loop",
+              "final_stop_reason": "toolUse",
+              "anomalies": [
+                "generation_error"
+              ],
+              "retry_count": 0,
+              "retries": [],
+              "tool_errors": 0,
+              "shell_nonzero_exits": 0,
+              "transport_errors": []
+            }
+          },
+          "operator_action": "Stopped after 12 consecutive equivalent commands with identical outputs; see stagnation-evidence.json."
+        },
+        "grade": null,
+        "answer_sha256": null
+      },
+      {
+        "run": "pi-q2-final-20260914-preview-2",
+        "result": {
+          "task": "Q2",
+          "label": "preview",
+          "mode": "pi_tools",
+          "requested_model": "qwen-latest-series-invite-2608",
+          "status": "captured",
+          "generation_seconds": 289.075,
+          "tool_calls": 50,
+          "generation_limit_seconds": 0,
+          "max_tokens": 8192,
+          "context_window": 32768,
+          "max_tool_calls": 0,
+          "auto_compact": true,
+          "finish_reason": "stop",
+          "score": {
+            "schema_version": 2,
+            "submission": {
+              "status": "pass",
+              "passed": 32,
+              "total": 32,
+              "scope": "functional suite only",
+              "response_format_passed": false,
+              "full_task_pass": false
+            },
+            "generation": {
+              "status": "completed_with_anomalies",
+              "failure": null,
+              "final_stop_reason": "stop",
+              "anomalies": [
+                "shell_nonzero_exit",
+                "tool_error"
+              ],
+              "retry_count": 0,
+              "retries": [],
+              "tool_errors": 2,
+              "shell_nonzero_exits": 2,
+              "transport_errors": []
+            }
+          }
+        },
+        "grade": {
+          "passed": 32,
+          "total": 32,
+          "source_sha256": "a26fb998e0439e444180dfb8e0a514cd554a913163072fcca5893460572fb131",
+          "submission_source": "first-answer.txt",
+          "constraint_review": {
+            "prohibited_function_constructs_observed": false,
+            "additional_unscored_concern": "Fixed fd 4 may overwrite an occupied caller descriptor; no occupied-fd case included.",
+            "scope": "Manual source review does not prove all possible inputs."
+          },
+          "extraction_policy": "last complete collect code block within the original first response; no repair",
+          "fixture_origin": "independently constructed; original reference package was not supplied",
+          "full_task_pass": false,
+          "functional_suite_pass": true,
+          "response_format_review": {
+            "passed": false,
+            "non_whitespace_characters_outside_code": 1916,
+            "reason": "Final response adds long requirement/validation tables rather than only the requested short explanation of original bugs."
+          }
+        },
+        "answer_sha256": "de1c31dd87521e4739220b8ff5268ee3dc09b647ec0b3546912b4daa060182fb"
+      }
+    ]
+  },
+  "final_pi_q2_config": {
+    "thinking": false,
+    "context_window": 32768,
+    "max_tokens": 8192,
+    "generation_seconds": 0,
+    "max_tool_calls": 0,
+    "auto_compact": true,
+    "keep_recent_tokens": 4096,
+    "reserve_tokens": 16384,
+    "docker_init": true,
+    "cpus": 1,
+    "memory_mb": 512,
+    "pids": 128
+  },
+  "selection": "First normally completed run with code in final response or saved final function; response format assessed separately. All additional runs retained."
+}

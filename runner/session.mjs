@@ -4,5 +4,5 @@ export function createBenchSession({modelRuntime,model,configDir,tools,defs,retr
   const loader={getExtensions:()=>({extensions:[],errors:[],runtime:createExtensionRuntime()}),getSkills:()=>({skills:[],diagnostics:[]}),getPrompts:()=>({prompts:[],diagnostics:[]}),getThemes:()=>({themes:[],diagnostics:[]}),getAgentsFiles:()=>({agentsFiles:[]}),getSystemPrompt:()=>undefined,getSystemPromptSource:()=>undefined,getAppendSystemPrompt:()=>[],getAppendSystemPromptSources:()=>[],extendResources:()=>{},reload:async()=>{}};
   return createAgentSession({cwd:'/workspace',agentDir:configDir,model,thinkingLevel:'off',modelRuntime,resourceLoader:loader,
     tools,customTools:defs,sessionManager:SessionManager.inMemory('/workspace'),
-    settingsManager:SettingsManager.inMemory({compaction:{enabled:process.env.SHELLSEM_AUTO_COMPACT==='1'},retry:{enabled:true,maxRetries:2,baseDelayMs:retryDelayMs,provider:{maxRetries:0,timeoutMs}}})});
+    settingsManager:SettingsManager.inMemory({compaction:{enabled:process.env.SHELLSEM_AUTO_COMPACT==='1',...(process.env.SHELLSEM_AUTO_COMPACT==='1'?{keepRecentTokens:4096}:{})},retry:{enabled:true,maxRetries:2,baseDelayMs:retryDelayMs,provider:{maxRetries:0,timeoutMs}}})});
 }

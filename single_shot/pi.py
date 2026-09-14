@@ -61,7 +61,9 @@ def run(task,label,directory):
         s.exec(['bash','-c','kill -STOP -1'],check=False)
         artifact=s.exec(['bash','-c','test -f /workspace/collect.sh && head -c 1048577 /workspace/collect.sh'],check=False)
         if not artifact.returncode and len(artifact.stdout)<=1048576:(directory/'collect.artifact.sh').write_bytes(artifact.stdout)
-        if not (directory/'first-answer.txt').exists():result['answer_status']='missing_final_answer'
+        if not (directory/'first-answer.txt').exists():
+            result['answer_status']='missing_final_answer'
+            if not failure:failure='missing_final_answer';result['status']=failure
         result['score']=summarize({'status':failure or 'pass'},read_events(directory/'events.jsonl'))
         atomic_json(directory/'result.json',result)
         heartbeat(directory,'finished',task=task,label=label,result_status=result['status'])

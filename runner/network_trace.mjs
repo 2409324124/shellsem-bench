@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 // No request bodies, credentials, query strings, or arbitrary response headers in traces.
 export function installNetworkTrace(emit) {
   const original=globalThis.fetch; let sequence=0;
@@ -9,6 +11,10 @@ export function installNetworkTrace(emit) {
   globalThis.fetch=async function(input,init){
     const id=++sequence,start=performance.now();
     const url=new URL(typeof input==='string'||input instanceof URL?input:input.url);
+    if(process.env.SHELLSEM_REQUEST_ARCHIVE && typeof init?.body==='string'){
+      const directory=process.env.SHELLSEM_REQUEST_ARCHIVE;fs.mkdirSync(directory,{recursive:true});
+      fs.writeFileSync(path.join(directory,String(id).padStart(4,'0')+'.json'),init.body);
+    }
     emit({type:'api_request_start',request_id:id,endpoint:url.origin+url.pathname});
     try{
       const response=await original.call(globalThis,input,init);

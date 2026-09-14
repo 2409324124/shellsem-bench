@@ -1,0 +1,30 @@
+{
+  "mode": "single_shot_api",
+  "api": true,
+  "pi": false,
+  "model_tools": false,
+  "first_response_only": true,
+  "required_bash": "5.2.37",
+  "tasks": [
+    {
+      "id": "Q1",
+      "prompt": "prompts/Q1.md",
+      "sha256": "09a718d3eb59eb0ed72c7441fb7955d566ab285e44b02f06607711f411ce32f1",
+      "status": "ready"
+    },
+    {
+      "id": "Q2",
+      "prompt": "prompts/Q2.md",
+      "sha256": "d4e014bfad07d6f79e968abcdda1f33d9ae3858b8a1aed4b0021e09086202033",
+      "status": "ready"
+    }
+  ],
+  "models": [
+    "qwen-latest-series-invite-2608",
+    "qwen3.8-max-0902"
+  ],
+  "enable_thinking": false,
+  "max_tokens": 8192,
+  "concurrency": 1,
+  "retries": 0
+}

@@ -58,13 +58,15 @@ async function main(){
   const model=runtime.getModel('qwen-bench',process.env.QWEN_MODEL_ID);
   if(!model)throw Error('Model not loaded');
   const {session}=await createBenchSession({modelRuntime:runtime,model,configDir,tools:['read','write','edit','bash'],defs});
+  const maxToolCalls=Number(process.env.SHELLSEM_MAX_TOOL_CALLS ?? 100);
+  if(!Number.isInteger(maxToolCalls)||maxToolCalls<0)throw Error('invalid_tool_budget');
   let count=0, exceeded=false; const toolIds=new Set();
   session.subscribe(e=>{
     if(e.type==='message_update'){const a=e.assistantMessageEvent;emit({type:e.type,deltaType:a.type,delta:a.delta});}
     else emit(e);
-    if(e.type==='tool_execution_start'&&!toolIds.has(e.toolCallId)){toolIds.add(e.toolCallId);if(++count>100){exceeded=true;void session.abort();}}
+    if(e.type==='tool_execution_start'&&!toolIds.has(e.toolCallId)){toolIds.add(e.toolCallId);++count;if(maxToolCalls>0&&count>maxToolCalls){exceeded=true;void session.abort();}}
   });
-  emit({type:'effective_configuration',model:model.id,systemPrompt:session.systemPrompt,toolNames:session.getActiveToolNames(),toolAdapter:'docker-operations',maxToolSeconds:30,retry:{maxRetries:2,baseDelayMs:2000,providerRetries:0,requestTimeoutMs:60000}});
+  emit({type:'effective_configuration',model:model.id,systemPrompt:session.systemPrompt,toolNames:session.getActiveToolNames(),toolAdapter:'docker-operations',maxToolSeconds:30,maxToolCalls,retry:{maxRetries:2,baseDelayMs:2000,providerRetries:0,requestTimeoutMs:60000}});
   try{await session.prompt(fs.readFileSync(promptFile,'utf8'));if(exceeded)throw Error('tool_budget_exceeded');
     const last=session.state.messages.filter(m=>m.role==='assistant').at(-1);
     if(!last||['error','aborted'].includes(last.stopReason))throw Error('agent_failed');

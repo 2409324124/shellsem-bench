@@ -1,0 +1,68 @@
+[
+  {
+    "run": "pi-compare-20260914-preview-Q2",
+    "last_request": "0056.json",
+    "last_max_tokens": 1,
+    "stop_reason": "length",
+    "usage": {
+      "input": 11014,
+      "output": 1,
+      "cacheRead": 21120,
+      "cacheWrite": 0,
+      "reasoning": 0,
+      "totalTokens": 32135,
+      "cost": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "total": 0
+      }
+    },
+    "context_window_configured": 32768
+  },
+  {
+    "run": "pi-q2-complete-20260914-preview-1",
+    "last_request": "0058.json",
+    "last_max_tokens": 1,
+    "stop_reason": "length",
+    "usage": {
+      "input": 1459,
+      "output": 1,
+      "cacheRead": 27392,
+      "cacheWrite": 0,
+      "reasoning": 0,
+      "totalTokens": 28852,
+      "cost": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "total": 0
+      }
+    },
+    "context_window_configured": 32768
+  },
+  {
+    "run": "pi-q2-unlimited-20260914-preview-1",
+    "last_request": "0055.json",
+    "last_max_tokens": 1,
+    "stop_reason": "length",
+    "usage": {
+      "input": 4621,
+      "output": 1,
+      "cacheRead": 24192,
+      "cacheWrite": 0,
+      "reasoning": 0,
+      "totalTokens": 28814,
+      "cost": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "total": 0
+      }
+    },
+    "context_window_configured": 32768
+  }
+]

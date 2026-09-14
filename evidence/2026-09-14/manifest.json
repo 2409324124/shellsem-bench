@@ -134,5 +134,29 @@
     "compressed_bytes": 281958,
     "credentials_scan": "passed",
     "source_directory": "runs/pi-q2-retry-20260914-3-baseline"
+  },
+  "pi-q2-complete-20260914-preview-1": {
+    "archive": "pi-q2-complete-20260914-preview-1.tar.gz",
+    "sha256": "2b737dd7197d577eb28042828e6db64fae407bd5f6f5a9b9c55ea9ebb61fb6a3",
+    "files": 66,
+    "compressed_bytes": 532918,
+    "credentials_scan": "passed",
+    "source_directory": "runs/pi-q2-complete-20260914-preview-1"
+  },
+  "pi-q2-unlimited-20260914-preview-1": {
+    "archive": "pi-q2-unlimited-20260914-preview-1.tar.gz",
+    "sha256": "cea6af48e8e6c0dc8740a38f389c6db7ae356cd8de1aecf8d774ced4cb1fdbee",
+    "files": 63,
+    "compressed_bytes": 635925,
+    "credentials_scan": "passed",
+    "source_directory": "runs/pi-q2-unlimited-20260914-preview-1"
+  },
+  "pi-q2-context131k-20260914-preview-1": {
+    "archive": "pi-q2-context131k-20260914-preview-1.tar.gz",
+    "sha256": "c195a750ec92e3d8f67c3a73b4c8d75f08173c99c6e49e5119f31ac81daeb791",
+    "files": 109,
+    "compressed_bytes": 1003550,
+    "credentials_scan": "passed",
+    "source_directory": "runs/pi-q2-context131k-20260914-preview-1"
   }
 }

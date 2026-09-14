@@ -52,7 +52,7 @@ def main():
                 'elapsed': time.monotonic()-start})
             if interrupted: reason = interrupted[0]
             elif now-beat > args.stale_seconds: reason = 'runner_heartbeat_stale'
-            elif time.monotonic()-start > args.deadline_seconds: reason = 'hard_deadline'
+            elif args.deadline_seconds > 0 and time.monotonic()-start > args.deadline_seconds: reason = 'hard_deadline'
             if reason:
                 break
             time.sleep(0.1)

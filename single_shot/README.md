@@ -38,3 +38,18 @@ Pi 固定 0.85.1，read/write/edit/bash 四工具在 Docker 内执行。每题�
 比较答案得分、生成是否完整、工具接口错误、Shell 非零退出、API 故障/重试、调用数、token 与耗时。Shell 非零可能来自故意构造的失败测试，不能自动当作工具使用错误。对照估计的是工具访问与 Pi harness 的联合影响；没有相同工具条件下的其他 harness 对照，不能单独识别 harness 的因果效果。
 
 凭据、二进制不提交 Git。原始轨迹本地保留，并在结束后经凭据扫描压缩归档到 evidence/，与报告和代码一起推送私有 GitHub 仓库。
+
+## 第二题不限总时间的补齐轮
+
+用户允许超出原 300 秒限制后，新旧模型均用以下参数重新取得完整最终函数并判分：
+
+```bash
+python3 -m runner.guard --run-dir runs/NEW_UNIQUE_RUN --deadline-seconds 0 -- \
+  python3 -m single_shot.pi --task Q2 --label preview --generation-seconds 0 --max-tokens 32768 --context-window 131072 --max-tool-calls 0
+```
+
+旧模型将 label 改为 baseline。0 关闭总时长截止；独立 guard 的心跳失联检测继续生效。32768 是模型配置的输出上限，SDK 可能根据当前上下文剩余额度调低实际请求值，原始请求体保留实际值。默认参数仍为原来的 300 秒和 8192 token，不改写历史配置。该补齐轮与原轮分开报告，不把不同预算的结果混为同条件比较。
+
+补齐轮同时把 Pi 本地 contextWindow 声明改为 131072，防止原 32768 声明将后期请求 max_tokens 压到 1。它是本轮 harness 配置，不据此声称供应商公布的模型窗口大小；实际请求与服务器接受情况另留证据。新旧模型同配置重跑。
+
+完整交付轮 `--max-tool-calls 0` 关闭总调用次数限制，默认仍为 100；单次工具超时、失联检测和日志大小限制仍生效。此前命中 100 次的独立运行保留，不伪装成模型自然结束。

@@ -66,7 +66,9 @@ def extract(raw):
 
 
 def grade(directory):
-    directory=Path(directory);raw=(directory/'first-answer.txt').read_text()
+    directory=Path(directory);source=directory/'first-answer.txt'
+    if not source.exists():source=directory/'collect.artifact.sh'
+    raw=source.read_text()
     code=extract(raw);(directory/'submission.sh').write_text(code)
     rows=[]
     for name,records,tail,scan_rc,worker_rcs,stream in CASES:
@@ -127,7 +129,7 @@ caller_job=$!
                 rows.append(row);(d/'result.json').write_text(json.dumps(row,indent=2)+'\n')
             finally:s.remove()
     summary={'passed':sum(r['passed'] for r in rows),'total':len(rows),'cases':rows,
-             'source_sha256':hashlib.sha256(code.encode()).hexdigest(),'constraint_review':'manual, reported separately','extraction_policy':'last complete collect code block within the original first response; no repair',
+             'source_sha256':hashlib.sha256(code.encode()).hexdigest(),'submission_source':source.name,'constraint_review':'manual, reported separately','extraction_policy':'last complete collect code block within the original first response; no repair',
              'fixture_origin':'independently constructed; original reference package was not supplied'}
     (directory/'grade.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')
     print(directory.name,summary['passed'],'/',summary['total'],flush=True)

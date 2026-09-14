@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[2]
 BASH=ROOT/'.runtime/bash-5.2.37/bin/bash'
 
 
-def main():
+def main(directories=None):
     out=ROOT/'runs/single-shot/2026-09-14-first'
     for label in ('preview','baseline'):
         assert (out/f'{label}-Q1/first-answer.txt').exists(),'Capture first, grade second'
@@ -22,8 +22,8 @@ def main():
         assert all(x==results[0] for x in results),'Non-deterministic oracle'
         expected[variant]=results[0]
     (out/'q1-expected.json').write_text(json.dumps(expected,ensure_ascii=False,indent=2)+'\n')
-    for label in ('preview','baseline'):
-        d=out/f'{label}-Q1';raw=(d/'first-answer.txt').read_text()
+    for d in (list(map(Path,directories)) if directories else [out/f'{label}-Q1' for label in ('preview','baseline')]):
+        label=d.name;raw=(d/'first-answer.txt').read_text()
         answers=[]
         for block in re.findall(r'```(?:json)?\s*\n(.*?)```',raw,re.S):
             try:
@@ -46,4 +46,6 @@ def main():
         print(label,json.dumps(grade,ensure_ascii=False))
     print('EXPECTED',json.dumps(expected,ensure_ascii=False))
 
-if __name__=='__main__':main()
+if __name__=='__main__':
+    import sys
+    main(sys.argv[1:])

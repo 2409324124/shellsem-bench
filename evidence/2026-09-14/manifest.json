@@ -1,0 +1,58 @@
+{
+  "2026-09-14-first-preview-Q1": {
+    "archive": "2026-09-14-first-preview-Q1.tar.gz",
+    "sha256": "43578fee206b44c7272570f1cfd863ee4992d0f95445448fbc777d76e6b1236c",
+    "files": 6,
+    "compressed_bytes": 4258,
+    "credentials_scan": "passed",
+    "source_directory": "runs/single-shot/2026-09-14-first/preview-Q1"
+  },
+  "2026-09-14-first-baseline-Q1": {
+    "archive": "2026-09-14-first-baseline-Q1.tar.gz",
+    "sha256": "363e6e8f9d59eba975883361adcc020324e228092f4ec94e982c4daf771cc803",
+    "files": 6,
+    "compressed_bytes": 5191,
+    "credentials_scan": "passed",
+    "source_directory": "runs/single-shot/2026-09-14-first/baseline-Q1"
+  },
+  "2026-09-14-first-preview-Q2": {
+    "archive": "2026-09-14-first-preview-Q2.tar.gz",
+    "sha256": "bc2bb8d936421f2bbd17951e365eb0c0f95180abfd585f7d529c5158da28ba62",
+    "files": 3,
+    "compressed_bytes": 3386,
+    "credentials_scan": "passed",
+    "source_directory": "runs/single-shot/2026-09-14-first/preview-Q2"
+  },
+  "2026-09-14-first-baseline-Q2": {
+    "archive": "2026-09-14-first-baseline-Q2.tar.gz",
+    "sha256": "a2e6e9b51488b0f980727ebf879ba80caaed675fc08acc6a89a6e982ca6880af",
+    "files": 103,
+    "compressed_bytes": 8554,
+    "credentials_scan": "passed",
+    "source_directory": "runs/single-shot/2026-09-14-first/baseline-Q2"
+  },
+  "2026-09-14-transport-retry-preview-Q2": {
+    "archive": "2026-09-14-transport-retry-preview-Q2.tar.gz",
+    "sha256": "35166be23464dbd939888eac169a2935d4c7a4a87e653e21dd69d638be09292b",
+    "files": 103,
+    "compressed_bytes": 18315,
+    "credentials_scan": "passed",
+    "source_directory": "runs/single-shot/2026-09-14-transport-retry/preview-Q2"
+  },
+  "pi-compare-20260914-preview-Q1": {
+    "archive": "pi-compare-20260914-preview-Q1.tar.gz",
+    "sha256": "c0984111456c94ea54b875d4a7b81ed72121d4263ace560e6cb5f21b76527406",
+    "files": 16,
+    "compressed_bytes": 20184,
+    "credentials_scan": "passed",
+    "source_directory": "runs/pi-compare-20260914-preview-Q1"
+  },
+  "pi-compare-20260914-baseline-Q1": {
+    "archive": "pi-compare-20260914-baseline-Q1.tar.gz",
+    "sha256": "19a2caf0e0bab31088baf354eecb910ad9a1c2a2998606578bb61aba43967573",
+    "files": 33,
+    "compressed_bytes": 36480,
+    "credentials_scan": "passed",
+    "source_directory": "runs/pi-compare-20260914-baseline-Q1"
+  }
+}

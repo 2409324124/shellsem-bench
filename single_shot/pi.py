@@ -9,7 +9,7 @@ from runner.state import atomic_json,heartbeat
 ROOT=Path(__file__).resolve().parents[1]
 
 
-def run(task,label,directory,generation_seconds=300,max_tokens=8192,context_window=32768,max_tool_calls=100):
+def run(task,label,directory,generation_seconds=300,max_tokens=8192,context_window=32768,max_tool_calls=100,auto_compact=False):
     c=load_config(ROOT/('.env' if label=='preview' else '.env.baseline'))
     prompt=ROOT/'single_shot/prompts_pi'/f'{task}.md'
     heartbeat(directory,'starting',task=task,label=label)
@@ -21,7 +21,7 @@ def run(task,label,directory,generation_seconds=300,max_tokens=8192,context_wind
         cfg=directory/'pi-config';cfg.mkdir()
         model={'id':c.model_id,'reasoning':True,'input':['text'],'contextWindow':context_window,'maxTokens':max_tokens,'samplingParams':{'enable_thinking':False},'compat':{'supportsStore':False,'supportsDeveloperRole':False,'supportsReasoningEffort':False,'maxTokensField':'max_tokens'}}
         atomic_json(cfg/'models.json',{'providers':{'qwen-bench':{'baseUrl':c.base_url,'api':'openai-completions','apiKey':'$QWEN_API_KEY','models':[model]}}})
-        env={**os.environ,'QWEN_API_KEY':c.api_key,'QWEN_MODEL_ID':c.model_id,'PI_OFFLINE':'1','SHELLSEM_REQUEST_ARCHIVE':str(directory/'requests'),'SHELLSEM_MAX_TOOL_CALLS':str(max_tool_calls)}
+        env={**os.environ,'QWEN_API_KEY':c.api_key,'QWEN_MODEL_ID':c.model_id,'PI_OFFLINE':'1','SHELLSEM_REQUEST_ARCHIVE':str(directory/'requests'),'SHELLSEM_MAX_TOOL_CALLS':str(max_tool_calls),'SHELLSEM_AUTO_COMPACT':'1' if auto_compact else '0'}
         process=subprocess.Popen(['node',str(ROOT/'runner/pi_agent.mjs'),'run',s.name,str(cfg),str(prompt)],env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         sel=selectors.DefaultSelector()
         for stream in (process.stdout,process.stderr):sel.register(stream,selectors.EVENT_READ)
@@ -51,7 +51,7 @@ def run(task,label,directory,generation_seconds=300,max_tokens=8192,context_wind
             process.wait(timeout=5)
         sel.close();process.stdout.close();process.stderr.close()
         if not failure and process.returncode:failure='generation_error'
-        result={'task':task,'label':label,'mode':'pi_tools','requested_model':c.model_id,'status':failure or 'captured','generation_seconds':round(time.monotonic()-start,3),'tool_calls':len(tool_ids),'generation_limit_seconds':generation_seconds,'max_tokens':max_tokens,'context_window':context_window,'max_tool_calls':max_tool_calls}
+        result={'task':task,'label':label,'mode':'pi_tools','requested_model':c.model_id,'status':failure or 'captured','generation_seconds':round(time.monotonic()-start,3),'tool_calls':len(tool_ids),'generation_limit_seconds':generation_seconds,'max_tokens':max_tokens,'context_window':context_window,'max_tool_calls':max_tool_calls,'auto_compact':auto_compact}
         if last:
             atomic_json(directory/'last-assistant.json',last)
             text=''.join(x.get('text','') for x in last.get('content',[]) if x.get('type')=='text')
@@ -74,10 +74,10 @@ def run(task,label,directory,generation_seconds=300,max_tokens=8192,context_wind
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--task',choices=['Q1','Q2'],required=True);p.add_argument('--label',choices=['preview','baseline'],required=True);p.add_argument('--generation-seconds',type=int,default=300,help='0 disables generation wall-clock cutoff');p.add_argument('--max-tokens',type=int,default=8192);p.add_argument('--context-window',type=int,default=32768);p.add_argument('--max-tool-calls',type=int,default=100,help='0 disables total tool-call cutoff');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--task',choices=['Q1','Q2'],required=True);p.add_argument('--label',choices=['preview','baseline'],required=True);p.add_argument('--generation-seconds',type=int,default=300,help='0 disables generation wall-clock cutoff');p.add_argument('--max-tokens',type=int,default=8192);p.add_argument('--context-window',type=int,default=32768);p.add_argument('--max-tool-calls',type=int,default=100,help='0 disables total tool-call cutoff');p.add_argument('--auto-compact',action='store_true');a=p.parse_args()
     if a.generation_seconds<0 or a.max_tokens<1 or a.context_window<a.max_tokens or a.max_tool_calls<0:p.error('Invalid generation limits')
     directory=Path(os.environ['SHELLSEM_RUN_DIR']).resolve()
-    try:r=run(a.task,a.label,directory,a.generation_seconds,a.max_tokens,a.context_window,a.max_tool_calls);print(json.dumps(r),flush=True)
+    try:r=run(a.task,a.label,directory,a.generation_seconds,a.max_tokens,a.context_window,a.max_tool_calls,a.auto_compact);print(json.dumps(r),flush=True)
     except Exception as e:
         atomic_json(directory/'result.json',{'status':'infrastructure_error','error_type':type(e).__name__,'error':str(e)[:1000]});raise
 

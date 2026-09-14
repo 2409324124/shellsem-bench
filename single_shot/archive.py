@@ -5,7 +5,7 @@ from runner.config import load_config
 ROOT=Path(__file__).resolve().parents[1]
 ALLOWED={'request.json','response.raw.json','first-answer.txt','capture.json','prompt.md','grade.json',
          'submission.sh','http-error.txt','events.jsonl','last-assistant.json','effective-config.json',
-         'result.json','generation-result.json','guard.json','runner.json','collect.artifact.sh'}
+         'process-exhaustion.txt','result.json','generation-result.json','guard.json','runner.json','collect.artifact.sh'}
 
 
 def main():

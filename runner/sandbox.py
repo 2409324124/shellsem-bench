@@ -26,7 +26,7 @@ class Sandbox:
         names=read_json(self.run_dir/'containers.json').get('names',[])
         names.append(self.name)
         atomic_json(self.run_dir/'containers.json',{'names':names})
-        docker('run','--pull=never','-d','--name',self.name,'--label','shellsem.managed=true',
+        docker('run','--pull=never','--init','-d','--name',self.name,'--label','shellsem.managed=true',
             '--network','bridge','--memory','512m','--memory-swap','512m','--cpus','1','--pids-limit','128',
             '--cap-drop','ALL','--security-opt','no-new-privileges','--read-only',
             '--tmpfs','/workspace:rw,exec,nosuid,size=128m,mode=1777',

@@ -158,5 +158,37 @@
     "compressed_bytes": 1003550,
     "credentials_scan": "passed",
     "source_directory": "runs/pi-q2-context131k-20260914-preview-1"
+  },
+  "pi-q2-full-20260914-preview-1": {
+    "archive": "pi-q2-full-20260914-preview-1.tar.gz",
+    "sha256": "086180431d794a39cfd9615b45d326cb8d6d237783e91adb3ad6a44c9b897576",
+    "files": 301,
+    "compressed_bytes": 3239047,
+    "credentials_scan": "passed",
+    "source_directory": "runs/pi-q2-full-20260914-preview-1"
+  },
+  "pi-q2-reaped-20260914-baseline-1": {
+    "archive": "pi-q2-reaped-20260914-baseline-1.tar.gz",
+    "sha256": "f470b5e08d2034007fa115feca4065dd22d9bb7e6d7acf089e1b1660d7f8ed43",
+    "files": 185,
+    "compressed_bytes": 1775128,
+    "credentials_scan": "passed",
+    "source_directory": "runs/pi-q2-reaped-20260914-baseline-1"
+  },
+  "pi-q2-reaped-20260914-baseline-2": {
+    "archive": "pi-q2-reaped-20260914-baseline-2.tar.gz",
+    "sha256": "3601b8f04947fec606e6c3c7c781a20d3925e4887f2870a29fdff003085121a1",
+    "files": 124,
+    "compressed_bytes": 78742,
+    "credentials_scan": "passed",
+    "source_directory": "runs/pi-q2-reaped-20260914-baseline-2"
+  },
+  "pi-q2-reaped-20260914-preview-1": {
+    "archive": "pi-q2-reaped-20260914-preview-1.tar.gz",
+    "sha256": "a784a2b8d3bbacb321cf54925fae3765961a5273ae86f8f926357a6a1db78a8f",
+    "files": 357,
+    "compressed_bytes": 7037469,
+    "credentials_scan": "passed",
+    "source_directory": "runs/pi-q2-reaped-20260914-preview-1"
   }
 }

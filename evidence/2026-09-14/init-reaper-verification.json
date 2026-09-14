@@ -1,0 +1,7 @@
+{
+  "orphan_jobs": 200,
+  "batches": 5,
+  "zombies_after": 0,
+  "subsequent_exec_succeeded": true,
+  "pids_limit": 128
+}

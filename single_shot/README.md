@@ -53,3 +53,17 @@ python3 -m runner.guard --run-dir runs/NEW_UNIQUE_RUN --deadline-seconds 0 -- \
 补齐轮同时把 Pi 本地 contextWindow 声明改为 131072，防止原 32768 声明将后期请求 max_tokens 压到 1。它是本轮 harness 配置，不据此声称供应商公布的模型窗口大小；实际请求与服务器接受情况另留证据。新旧模型同配置重跑。
 
 完整交付轮 `--max-tool-calls 0` 关闭总调用次数限制，默认仍为 100；单次工具超时、失联检测和日志大小限制仍生效。此前命中 100 次的独立运行保留，不伪装成模型自然结束。
+
+容器现启用 Docker `--init` 回收退出的孤儿子进程。原 sleep PID 1 在长工具会话中曾积累 126 个僵尸进程，耗尽 128 PID 配额。验证使用五批共 200 个后台任务，结束后僵尸数为 0。资源上限不变；失效会话和进程证据保留，后续新旧模型均在该修正环境重跑。
+
+## 最终完整评测配置
+
+扩大窗口的诊断轮仍会在历史用尽时截断，因此最终新旧模型配对使用原 32768 上下文 / 8192 输出预算并启用 Pi 自动压缩恢复：
+
+```bash
+python3 -m runner.guard --run-dir runs/NEW_UNIQUE_RUN --deadline-seconds 0 -- \
+  python3 -m single_shot.pi --task Q2 --label preview --generation-seconds 0 \
+  --max-tokens 8192 --context-window 32768 --max-tool-calls 0 --auto-compact
+```
+
+旧模型改为 baseline。自动压缩是 Pi 自带的历史总结/恢复机制，事件及请求全部留档；评测者不提供隐藏测试反馈。原默认 compaction=false 保留，只有显式参数开启，以便复现旧记录。

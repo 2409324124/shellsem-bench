@@ -70,5 +70,69 @@
     "compressed_bytes": 586409,
     "credentials_scan": "passed",
     "source_directory": "runs/pi-compare-20260914-baseline-Q2"
+  },
+  "2026-09-14-repeat-1-baseline-Q1": {
+    "archive": "2026-09-14-repeat-1-baseline-Q1.tar.gz",
+    "sha256": "9edfec3296bfe5f317d15e87735d5fdef32f262adf8d215e2be58e08eee6f765",
+    "files": 6,
+    "compressed_bytes": 4856,
+    "credentials_scan": "passed",
+    "source_directory": "runs/single-shot/2026-09-14-repeat-1/baseline-Q1"
+  },
+  "2026-09-14-repeat-1-baseline-Q2": {
+    "archive": "2026-09-14-repeat-1-baseline-Q2.tar.gz",
+    "sha256": "00fe2d76f4ec91bdcd98467a1b98a5558bdedb7509f0a71014feb20378ac64e8",
+    "files": 103,
+    "compressed_bytes": 8594,
+    "credentials_scan": "passed",
+    "source_directory": "runs/single-shot/2026-09-14-repeat-1/baseline-Q2"
+  },
+  "2026-09-14-repeat-2-baseline-Q1": {
+    "archive": "2026-09-14-repeat-2-baseline-Q1.tar.gz",
+    "sha256": "a065a4cfac53f201cde43b31d252bc4eac30e609e71802cf11b3579ed33a2876",
+    "files": 6,
+    "compressed_bytes": 4988,
+    "credentials_scan": "passed",
+    "source_directory": "runs/single-shot/2026-09-14-repeat-2/baseline-Q1"
+  },
+  "2026-09-14-repeat-2-baseline-Q2": {
+    "archive": "2026-09-14-repeat-2-baseline-Q2.tar.gz",
+    "sha256": "e09bc23e1e70abf3d16b6ea63f55b1f632932e6ba44619f72cb69b470a89e7c3",
+    "files": 103,
+    "compressed_bytes": 8673,
+    "credentials_scan": "passed",
+    "source_directory": "runs/single-shot/2026-09-14-repeat-2/baseline-Q2"
+  },
+  "pi-q2-retry-20260914-1-baseline": {
+    "archive": "pi-q2-retry-20260914-1-baseline.tar.gz",
+    "sha256": "0270ad5eb505670e885d12a3837e462c353c5a6271dd18126c6dd7273118e3bc",
+    "files": 146,
+    "compressed_bytes": 306699,
+    "credentials_scan": "passed",
+    "source_directory": "runs/pi-q2-retry-20260914-1-baseline"
+  },
+  "diagnostic-20260914-repeat1-Q2": {
+    "archive": "diagnostic-20260914-repeat1-Q2.tar.gz",
+    "sha256": "047fe1b1474c542a70489a33a7feb7f3f9ca8bb08ae7c56cfb24a2ede3f51403",
+    "files": 99,
+    "compressed_bytes": 4489,
+    "credentials_scan": "passed",
+    "source_directory": "runs/diagnostic-20260914-repeat1-Q2"
+  },
+  "pi-q2-retry-20260914-2-baseline": {
+    "archive": "pi-q2-retry-20260914-2-baseline.tar.gz",
+    "sha256": "f8ba610b82a787853dfd3b393996d9e832d7ad3361bf8ed419b7cd15ca831719",
+    "files": 128,
+    "compressed_bytes": 101122,
+    "credentials_scan": "passed",
+    "source_directory": "runs/pi-q2-retry-20260914-2-baseline"
+  },
+  "pi-q2-retry-20260914-3-baseline": {
+    "archive": "pi-q2-retry-20260914-3-baseline.tar.gz",
+    "sha256": "29aba369286e1e2d4de49638ee35c71731bedebc75f45d705e60bd49b5c4ab05",
+    "files": 131,
+    "compressed_bytes": 281958,
+    "credentials_scan": "passed",
+    "source_directory": "runs/pi-q2-retry-20260914-3-baseline"
   }
 }

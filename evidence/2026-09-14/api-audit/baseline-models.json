@@ -1,0 +1,11 @@
+{
+  "label": "baseline",
+  "kind": "models",
+  "url": "https://dashscope.aliyuncs.com/compatible-mode/v1/models",
+  "requested_model": "qwen3.8-max-0902",
+  "key_fingerprint": "577fadc2eb18",
+  "status": 200,
+  "configured_model_listed": true,
+  "seconds": 1.376,
+  "model_count": 250
+}

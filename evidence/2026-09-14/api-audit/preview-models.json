@@ -1,0 +1,11 @@
+{
+  "label": "preview",
+  "kind": "models",
+  "url": "https://mdataplus-open.alibaba-inc.com/v1/models",
+  "requested_model": "qwen-latest-series-invite-2608",
+  "key_fingerprint": "dce96c212624",
+  "status": 200,
+  "configured_model_listed": true,
+  "seconds": 2.808,
+  "model_count": 1
+}

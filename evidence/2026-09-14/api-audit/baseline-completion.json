@@ -1,0 +1,30 @@
+{
+  "label": "baseline",
+  "kind": "completion",
+  "url": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+  "requested_model": "qwen3.8-max-0902",
+  "key_fingerprint": "577fadc2eb18",
+  "status": 200,
+  "response_model": "qwen3.8-max-0902",
+  "response_id": "chatcmpl-4c0a89de-815e-99d7-8d3e-92802f716b18",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "OK.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "usage": {
+    "completion_tokens": 2,
+    "prompt_tokens": 17,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "text_tokens": 17
+    },
+    "total_tokens": 19
+  },
+  "seconds": 1.479
+}

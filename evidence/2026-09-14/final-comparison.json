@@ -288,5 +288,34 @@
     "memory_mb": 512,
     "pids": 128
   },
-  "selection": "First normally completed run with code in final response or saved final function; response format assessed separately. All additional runs retained."
+  "selection": "First normally completed run with code in final response or saved final function; response format assessed separately. All additional runs retained.",
+  "scoring_policy": {
+    "source": "user clarification",
+    "explanation_errors_affect_correctness": false,
+    "explanation_length_and_presentation_scored": false,
+    "code_constraints_still_reviewed": true,
+    "historical_reviews_preserved": true
+  },
+  "current_outcomes": {
+    "bare": {
+      "Q1": {
+        "old": "fail",
+        "new": "fail"
+      },
+      "Q2": {
+        "old": "fail",
+        "new": "fail"
+      }
+    },
+    "pi": {
+      "Q1": {
+        "old": "pass",
+        "new": "pass"
+      },
+      "Q2": {
+        "old": "fail",
+        "new": "pass"
+      }
+    }
+  }
 }

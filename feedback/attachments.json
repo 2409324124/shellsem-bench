@@ -1,0 +1,17 @@
+[
+  {
+    "file": "task-attachments.zip",
+    "bytes": 9151,
+    "sha256": "670e069920cd446e4b6a8845d605b06b5c542a182f32728cadd25694bd6f9ee2"
+  },
+  {
+    "file": "evaluation-products.zip",
+    "bytes": 19477,
+    "sha256": "3b2457d392ff5878b8acd4b0ae03287c0bc09aed0a54041f8cf33c644a8699dc"
+  },
+  {
+    "file": "execution-data.zip",
+    "bytes": 19610353,
+    "sha256": "833d9bcd41d63bd09619a0d4a421b82420bb20e04294220ef67875f5e5b4f762"
+  }
+]

@@ -110,3 +110,9 @@ Docker 集成检查包括五题参考解、故意错误版本、runner SIGSTOP �
 项目方案见 [agent.md](agent.md)，模型接入证据见 [reports/](reports/)。原始凭据、原始轨迹、node_modules 不进入版本控制。v0.1.0 的 10 次 smoke 已全部结束，详细记录留在本地 `runs/SMOKE-RESULTS.md`。模拟 API 验证覆盖重试恢复不重复执行已完成工具、超时恢复、重试上限、鉴权/额度错误不重试。
 
 本机 API 的串行补跑已捕获底层 `UND_ERR_CONNECT_TIMEOUT`（10 秒连接期限），以及请求超时、502；重试可以恢复这些故障。仅凭这次 smoke 不能认定服务稳定性或 key 并发能力。
+
+## 评测反馈材料
+
+[新老模型对照总结](reports/model-comparison-summary-2026-09-14.md) · [表单填写内容](feedback/feedback-form.md) · [任务附件](feedback/task-attachments.zip) · [评测产物](feedback/evaluation-products.zip) · [执行过程数据](feedback/execution-data.zip)
+
+当前计分口径：解释错误不扣正确性分；以执行结果、代码功能和代码约束为准。
